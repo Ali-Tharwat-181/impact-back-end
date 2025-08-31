@@ -10,7 +10,6 @@ export async function registerService({
   password,
   phoneNumber,
   preferredLanguage,
-  role,
 }) {
   if (!name || !email || !password || !phoneNumber) {
     throw new Error("Please provide all required fields.");
@@ -30,7 +29,7 @@ export async function registerService({
       password,
       phoneNumber,
       preferredLanguage,
-      role,
+      role: "student",
     });
     const token = generateToken(user._id, user.role);
     return {
