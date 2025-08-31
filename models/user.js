@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 const userSchema = new mongoose.Schema(
   {
@@ -21,7 +23,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["student", "instructor", "admin", "cs"],
-      // default: "student",
+      default: "student",
     },
     phoneNumber: {
       type: String,

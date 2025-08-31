@@ -69,7 +69,11 @@ export async function loginService({ email, password }) {
 
   // All user data is now in the User model
   return {
-    user,
+    user: {
+      _id: user._id,
+      name: user.name,
+      role: user.role,
+    },
     token,
   };
 }

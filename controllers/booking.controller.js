@@ -1,4 +1,3 @@
-// controllers/booking.controller.js
 import {
   createBooking,
   getUserBookings,
@@ -9,9 +8,9 @@ import {
 export const createBookingController = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { courseCategory, optionId } = req.body;
+    const { courseId, optionId, lang } = req.body; // ✅ courseId instead of category
 
-    const booking = await createBooking(userId, { courseCategory, optionId });
+    const booking = await createBooking(userId, { courseId, optionId, lang });
 
     res.status(201).json({ message: "Booking created", booking });
   } catch (error) {

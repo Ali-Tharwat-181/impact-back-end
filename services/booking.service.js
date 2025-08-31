@@ -1,15 +1,20 @@
-// services/booking.service.js
 import Booking from "../models/bookings.js";
 import Course from "../models/courses.js";
 
-export const createBooking = async (userId, { courseCategory, optionId }) => {
-  const course = await Course.findOne({});
-  if (!course) throw new Error("No courses available");
+export const createBooking = async (
+  userId,
+  { courseId, optionId, lang = "en" }
+) => {
+  // Find the specific course
+  const course = await Course.findById(courseId);
+  if (!course) throw new Error("Course not found");
 
-  const courseCategoryData = course[courseCategory]?.en; // default to English
-  if (!courseCategoryData) throw new Error("Course category not found");
+  // Access correct language data (en or ar)
+  const courseLangData = course[lang];
+  if (!courseLangData) throw new Error(`Course data not available in ${lang}`);
 
-  const selectedOption = courseCategoryData.Options.find(
+  // Find selected option
+  const selectedOption = courseLangData.Options.find(
     (opt) => opt.id === optionId
   );
   if (!selectedOption) throw new Error("Selected option not found");
@@ -18,7 +23,7 @@ export const createBooking = async (userId, { courseCategory, optionId }) => {
   const booking = await Booking.create({
     student: userId,
     course: course._id,
-    category: courseCategory,
+    category: course.type, // directly from course.type
     optionId,
   });
 
@@ -26,11 +31,15 @@ export const createBooking = async (userId, { courseCategory, optionId }) => {
 };
 
 export const getUserBookings = async (userId) => {
-  return await Booking.find({ student: userId }).populate("course");
+  return await Booking.find({ student: userId })
+    .populate("course")
+    .populate("student", "name email");
 };
 
 export const getAllBookings = async () => {
-  return await Booking.find().populate("student course");
+  return await Booking.find()
+    .populate("course")
+    .populate("student", "name email");
 };
 
 export const cancelBooking = async (bookingId, userId) => {

@@ -22,18 +22,13 @@ const languageSchema = new mongoose.Schema({
 
 const courseSchema = new mongoose.Schema(
   {
-    IELTS: {
-      en: languageSchema,
-      ar: languageSchema,
-    },
-    Group: {
-      en: languageSchema,
-      ar: languageSchema,
-    },
-    Private: {
-      en: languageSchema,
-      ar: languageSchema,
-    },
+    type: {
+      type: String,
+      enum: ["IELTS", "Group", "Private"],
+      required: true,
+    }, // identifies if it's IELTS, Group, or Private
+    en: languageSchema,
+    ar: languageSchema,
   },
   { timestamps: true }
 );
